@@ -44,14 +44,14 @@ const StyledFormControl = styled(FormControl)`
   width: 100%;
 `;
 const StyledLabel = styled(InputLabel)`
-font-size: 14px;
+  font-size: 14px;
 `;
 const StyledInput = styled(Input)`
 `;
 const StyledSubmitButton = styled(Button)`
   margin-top: 30px;
 `;
-const StyledLink = styled(Typography)`
+const StyledLink = styled.span`
   margin-top: 10px;
   a{
     font-size: 14px;
@@ -65,8 +65,10 @@ const StyledLink = styled(Typography)`
   }
 `;
 const StyledError = styled(Typography)`
+  font-size: 14px;
   color: darkred;
   text-align: center;
+  margin-top: 10px;
 `;
 
 
@@ -78,23 +80,25 @@ const SignUp = () => {
     let history = useHistory();
     const submitSignUp = (e) => {
         e.preventDefault();
-        if (!password === passwordConfirmation) {
-            setSignUpError('Password do not match !');
-        }
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(authRes => {
-            const user = {
-                email: authRes.user.email,
-            };
-            firebase.firestore().collection('users').doc(email).set(user).then(() => {
-                history.push('/dashboard')
-            }, dbError => {
-                console.log(dbError);
+        const regex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]{2,}))$/);
+        if (regex.exec(email) === null || password !== passwordConfirmation) {
+            setSignUpError('Enter a valid email address and password !');
+        } else {
+            firebase.auth().createUserWithEmailAndPassword(email, password).then(authRes => {
+                const user = {
+                    email: authRes.user.email,
+                };
+                firebase.firestore().collection('users').doc(email).set(user).then(() => {
+                    history.push('/dashboard')
+                }, dbError => {
+                    console.log(dbError);
+                    setSignUpError('Failed to add user')
+                })
+            }, authError => {
+                console.log(authError);
                 setSignUpError('Failed to add user')
             })
-        }, authError => {
-            console.log(authError);
-            setSignUpError('Failed to add user')
-        })
+        }
     };
     const userTyping = (type, e) => {
         switch (type) {
@@ -116,7 +120,7 @@ const SignUp = () => {
         <StyledMain>
             <StyledContainer>
                 <CssBaseline/>
-                <Typography component='h2' variant='h5'>Login</Typography>
+                <Typography component='h2' variant='h5'>Sign Up</Typography>
                 <StyledForm onSubmit={(e) => submitSignUp(e)}>
                     <StyledFormControl required fullWidth margin='normal'>
                         <StyledLabel htmlFor='signup-email-input'>Enter Your Email</StyledLabel>
