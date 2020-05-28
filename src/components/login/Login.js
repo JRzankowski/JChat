@@ -1,5 +1,4 @@
-import React, {useState} from "react";
-
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {
     Button,
@@ -9,9 +8,11 @@ import {
     Paper,
     CssBaseline,
     FormControl,
-    CircularProgress
+    CircularProgress,
+    Grow
 } from '@material-ui/core';
 import {Link, useHistory} from 'react-router-dom'
+
 const firebase = require("firebase");
 
 const StyledMain = styled.main`
@@ -25,6 +26,15 @@ const StyledMain = styled.main`
   padding: 0 20px;
   filter: ${props => props.loading ? 'blur(1px)' : null};
   z-index: 4;
+  animation: openTransition 0.8s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+  @keyframes openTransition {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+}
   @media(min-width: 400px){
     width: 400px;
     top: 45%;
@@ -102,7 +112,11 @@ const SignUp = () => {
     const [password, setPassword] = useState(null);
     const [loginError, setLoginError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [view, setView] = useState(false);
     let history = useHistory();
+    useEffect(() => {
+        setView(true);
+    }, []);
     const submitLogin = (e) => {
         e.preventDefault();
         setLoading(true);

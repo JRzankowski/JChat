@@ -27,6 +27,15 @@ const StyledMain = styled.main`
   padding: 0 20px;
   filter: ${props => props.loading ? 'blur(1px)' : null};
   z-index: 4;
+  animation: openTransition 0.8s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+  @keyframes openTransition {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+   }
   @media(min-width: 400px){
     width: 400px;
     top: 45%;
