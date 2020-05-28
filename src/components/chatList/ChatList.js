@@ -31,8 +31,6 @@ const ChatList = ({selectChatFn, newChatBtnFn, chats, userEmail, selectedChatInd
     };
     const selectChat = (index) => {
         console.log(index);
-
-
     };
     if (chats.length > 0) {
         return (
@@ -57,7 +55,7 @@ const ChatList = ({selectChatFn, newChatBtnFn, chats, userEmail, selectedChatInd
                                                           <>
                                                               <Typography component='span' color='textPrimary'>
                                                                   {
-                                                                      chat.messages[chat.messages.length - 1].message.substring(0, 30)
+                                                                      chat.messages[chat.messages.length - 1].message.substring(0, 30) + ' ...'
                                                                   }
                                                               </Typography>
                                                           </>

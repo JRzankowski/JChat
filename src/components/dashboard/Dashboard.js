@@ -19,7 +19,7 @@ const Dashboard = () => {
                    .collection('chats')
                    .where('users', 'array-contains', usr.email)
                    .onSnapshot(async res =>{
-                       const chats = res.docs.map(doc=>doc.data);
+                       const chats = res.docs.map(doc=>doc.data());
                        await setEmail(usr.email);
                        await setChats(chats)
                    })
@@ -34,6 +34,8 @@ const Dashboard = () => {
     const selectChat = (chatIndex) => {
         console.log(chatIndex);
     };
+
+
 
     return (
         <>
