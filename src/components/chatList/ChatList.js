@@ -30,13 +30,13 @@ const ChatList = ({selectChatFn, newChatBtnFn, chats, userEmail, selectedChatInd
         console.log('new chat');
     };
     const selectChat = (index) => {
-        console.log(index);
+        selectChatFn(index);
     };
     if (chats.length > 0) {
         return (
             <StyledMain>
-                <Button variant='contained' fullWidth onClick={newChat}>
-                    button
+                <Button variant='contained' fullWidth onClick={newChat} color='primary'>
+                    New Message
                 </Button>
                 <List>
                     {
@@ -73,7 +73,13 @@ const ChatList = ({selectChatFn, newChatBtnFn, chats, userEmail, selectedChatInd
         )
     } else {
         return (
-            <StyledMain/>
+            <StyledMain>
+                <Button color='primary' variant='contained' fullWidth onClick={newChat}>
+                    New Message
+                </Button>
+                <List/>
+
+            </StyledMain>
         )
 
     }
