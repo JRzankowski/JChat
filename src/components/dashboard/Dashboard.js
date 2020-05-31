@@ -4,6 +4,7 @@ import {useHistory} from "react-router-dom";
 import {Button} from "@material-ui/core";
 import styled from "styled-components";
 import ChatView from "../chatView/ChatView";
+import ChatTextBox from "../chatTextBox/ChatTextBox";
 
 const firebase = require("firebase");
 
@@ -38,18 +39,41 @@ const Dashboard = () => {
                         const chats = res.docs.map(doc => doc.data());
                         await setEmail(usr.email);
                         await setChats(chats)
-                    })
+                    });
+
+
             }
 
         });
-    });
+    },[]);
+    useEffect(() => {
+        return () => {
+            console.log("cleaned up");
+        };
+    }, []);
     const newChatBtnClicked = () => {
         setNewChatFromVisible(true);
         setSelectedChat(null)
     };
+    const submitMessage = (message) => {
+        const docKey = buildDocKey(chats[selectedChat].users.filter(user => user !== email)[0]);
+        firebase.firestore().collection('chats').doc(docKey).update({
+            messages: firebase.firestore.FieldValue.arrayUnion({
+                sender: email,
+                message: message,
+                timestamp: Date.now()
+            }),
+            receiverHasRead: false
+        });
+
+
+    };
     const selectChat = (chatIndex) => {
         setSelectedChat(chatIndex)
     };
+    const buildDocKey = (friend) => [email, friend].sort().join(':');
+
+
     const signOut = () => {
         firebase.auth().signOut()
     };
@@ -58,7 +82,19 @@ const Dashboard = () => {
             <ChatList selectChatFn={selectChat} newChatBtnFn={newChatBtnClicked} chats={chats} userEmail={email}
                       selectedChatIndex={selectedChat} history={history}/>
             {
-                newChatFromVisible ? null : <ChatView user={email} chat={chats[selectedChat]}/>
+                newChatFromVisible ? null : (
+                    <>
+                        <ChatView user={email} chat={chats[selectedChat]}/>
+
+                    </>
+
+                )
+
+            }
+            {
+                selectedChat !== null && !newChatFromVisible ? (
+                    <ChatTextBox submitMessageFn={submitMessage}/>
+                ) : null
             }
             <StyledSignOutBtn onClick={signOut}>Sign Out</StyledSignOutBtn>
         </>

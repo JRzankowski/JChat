@@ -12,7 +12,7 @@ const StyledWrapper = styled.div`
   position: absolute;
 `;
 const StyledUserSentBox = styled.div`
-  float: left;
+  float: right;
   clear: both;
   padding: 20px;
   word-wrap: break-word;
@@ -23,7 +23,7 @@ const StyledUserSentBox = styled.div`
   border-radius: 10px;
 `;
 const StyledFriendSentBox = styled(StyledUserSentBox)`
-  float: right;
+  float: left;
 `;
 const StyledChatHeader = styled.div`
   width: calc(100% - 301px);
@@ -42,10 +42,10 @@ const ChatView = ({user, chat}) => {
     const container = document.querySelector('.chatview-container');
     if(container)
       container.scrollTo(0,container.scrollHeight)
-  });
+  },[]);
     if (chat === undefined) {
         return (
-            <StyledWrapper>chat view</StyledWrapper>
+            <StyledWrapper></StyledWrapper>
         )
 
     } else {
@@ -54,7 +54,7 @@ const ChatView = ({user, chat}) => {
               <StyledChatHeader>
                 Your conversation with {chat.users.filter(usr => usr !== user)}
               </StyledChatHeader>
-                <StyledWrapper class='chatview-container'>
+                <StyledWrapper className='chatview-container'>
                     {
                         chat.messages.map((msg, index) => {
                             return (
