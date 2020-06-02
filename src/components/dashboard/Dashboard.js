@@ -40,21 +40,39 @@ const Dashboard = () => {
                         await setEmail(usr.email);
                         await setChats(chats)
                     });
-
-
             }
-
         });
-    },[]);
+
+    }, []);
     useEffect(() => {
         return () => {
             console.log("cleaned up");
         };
     }, []);
+
     const newChatBtnClicked = () => {
         setNewChatFromVisible(true);
         setSelectedChat(null)
     };
+
+    const messageRead = (chatIndex) => {
+        const docKey = buildDocKey(chats[chatIndex].users.filter(user => user !== email)[0]);
+        if (clickedChatWhereNotSender(chatIndex)) {
+            firebase.firestore().collection('chats').doc(docKey).update({
+                receiverHasRead: true
+            }).then(r => console.log(r))
+        } else {
+            console.log('user was the sender')
+        }
+    };
+    const clickedChatWhereNotSender = (chatIndex) => chats[chatIndex].messages[chats[chatIndex].messages.length - 1].sender !== email;
+
+    const selectChat = (chatIndex) => {
+         setSelectedChat(chatIndex);
+        messageRead(chatIndex);
+
+    };
+
     const submitMessage = (message) => {
         const docKey = buildDocKey(chats[selectedChat].users.filter(user => user !== email)[0]);
         firebase.firestore().collection('chats').doc(docKey).update({
@@ -65,15 +83,9 @@ const Dashboard = () => {
             }),
             receiverHasRead: false
         });
-
-
     };
-    const selectChat = (chatIndex) => {
-        setSelectedChat(chatIndex)
-    };
+
     const buildDocKey = (friend) => [email, friend].sort().join(':');
-
-
     const signOut = () => {
         firebase.auth().signOut()
     };
@@ -87,9 +99,7 @@ const Dashboard = () => {
                         <ChatView user={email} chat={chats[selectedChat]}/>
 
                     </>
-
                 )
-
             }
             {
                 selectedChat !== null && !newChatFromVisible ? (

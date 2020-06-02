@@ -24,14 +24,22 @@ const StyledMain = styled.main`
 const StyledListItem = styled(ListItem)`
   cursor: pointer;
 `;
+const StyledNotificationImportant = styled(NotificationImportant)`
+  color: red;
+  position: absolute;
+  top: 0;
+  right: 5px;
+`;
 
 const ChatList = ({selectChatFn, newChatBtnFn, chats, userEmail, selectedChatIndex, history}) => {
     const newChat = () => {
         console.log('new chat');
     };
     const selectChat = (index) => {
+        console.log(index);
         selectChatFn(index);
     };
+    const userIsSender = (chat) => chat.messages[chat.messages.length - 1].sender === userEmail;
     if (chats.length > 0) {
         return (
             <StyledMain>
@@ -43,7 +51,7 @@ const ChatList = ({selectChatFn, newChatBtnFn, chats, userEmail, selectedChatInd
                         chats.map((chat, index) => {
                             return (
                                 <div key={index}>
-                                    <StyledListItem onClick={() => selectChat(index)}
+                                    <StyledListItem onClick={()=>{selectChat(index)}}
                                                     selected={selectedChatIndex === index}
                                                     alignItems='flex-start'>
                                         <ListItemAvatar>
@@ -62,8 +70,15 @@ const ChatList = ({selectChatFn, newChatBtnFn, chats, userEmail, selectedChatInd
                                                       }>
 
                                         </ListItemText>
+                                        {
+                                            chat.receiverHasRead === false && !userIsSender(chat) ? (
+                                                <ListItemIcon>
+                                                    <StyledNotificationImportant/>
+                                                </ListItemIcon>
+                                            ) : null
+                                        }
                                     </StyledListItem>
-                                    <Divider></Divider>
+                                    <Divider/>
                                 </div>
                             )
                         })
