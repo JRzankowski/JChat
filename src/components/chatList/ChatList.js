@@ -36,7 +36,6 @@ const ChatList = ({selectChatFn, newChatBtnFn, chats, userEmail, selectedChatInd
         console.log('new chat');
     };
     const selectChat = (index) => {
-        console.log(index);
         selectChatFn(index);
     };
     const userIsSender = (chat) => chat.messages[chat.messages.length - 1].sender === userEmail;

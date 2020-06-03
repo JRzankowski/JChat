@@ -25,6 +25,7 @@ const Dashboard = () => {
     const [newChatFromVisible, setNewChatFromVisible] = useState(false);
     const [email, setEmail] = useState(false);
     const [chats, setChats] = useState([]);
+    const [chatIndex, setChatIndex] = useState(null);
     let history = useHistory();
     useEffect(() => {
         firebase.auth().onAuthStateChanged(async usr => {
@@ -52,6 +53,7 @@ const Dashboard = () => {
 
     const newChatBtnClicked = () => {
         setNewChatFromVisible(true);
+
         setSelectedChat(null)
     };
 
@@ -68,8 +70,10 @@ const Dashboard = () => {
     const clickedChatWhereNotSender = (chatIndex) => chats[chatIndex].messages[chats[chatIndex].messages.length - 1].sender !== email;
 
     const selectChat = (chatIndex) => {
+        setChatIndex(chatIndex);
          setSelectedChat(chatIndex);
         messageRead(chatIndex);
+
 
     };
 
@@ -103,7 +107,7 @@ const Dashboard = () => {
             }
             {
                 selectedChat !== null && !newChatFromVisible ? (
-                    <ChatTextBox submitMessageFn={submitMessage}/>
+                    <ChatTextBox chatIndex={chatIndex} messageReadFn={messageRead} submitMessageFn={submitMessage}/>
                 ) : null
             }
             <StyledSignOutBtn onClick={signOut}>Sign Out</StyledSignOutBtn>

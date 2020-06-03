@@ -21,14 +21,14 @@ const StyledTextField = styled(TextField)`
   width: calc(100% - 25px)
 `;
 
-const ChatTextBox = ({submitMessageFn}) => {
+const ChatTextBox = ({submitMessageFn,messageReadFn,chatIndex}) => {
     const [chatText, setChatText] = useState('');
     const userTyping = (e) => {
         e.keyCode === 13 ? submitMessage() : setChatText(e.target.value);
     };
     const messageValid = (text) => text && text.replace(/\s/g, '').length;
     const userClickedInput = () => {
-        console.log('user click');
+        messageReadFn(chatIndex);
     };
     const submitMessage = () => {
         if (messageValid(chatText)) {
