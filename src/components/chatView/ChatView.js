@@ -10,6 +10,7 @@ const StyledWrapper = styled.div`
   top: 50px;
   width: calc(100% - 300px);
   position: absolute;
+  display: none;
 `;
 const StyledUserSentBox = styled.div`
   float: right;
